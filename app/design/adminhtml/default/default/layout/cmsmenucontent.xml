@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_cms_page_edit>
+        <reference name="cms_page_edit_tabs">
+            <block type="cmsmenucontent/cms_page_edit_tab_cmsselect" name="cms_page_edit_tab_cmsselect" />
+            <action method="addTab"><name>cmsmenucontent_section</name><block>cms_page_edit_tab_cmsselect</block></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>cmsmenucontent/js/cmsmenucontent.js</name>
+            </action>
+        </reference>
+    </adminhtml_cms_page_edit>
+</layout>

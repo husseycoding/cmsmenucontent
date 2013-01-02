@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <cms_page>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/cmsmenucontent.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/cmsmenucontent.css</name>
+            </action>
+        </reference>
+    </cms_page>
+</layout>
