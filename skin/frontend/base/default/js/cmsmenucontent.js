@@ -2,6 +2,7 @@ var menucontent = Class.create({
     afterInit: function() {
         this.initMenuItems();
         this.addObservers();
+        this.bookmarkSwitch();
     },
     initMenuItems: function() {
         var count = 0;
@@ -35,6 +36,17 @@ var menucontent = Class.create({
                 $(item.value).hide();
             }
         });
+    },
+    bookmarkSwitch: function() {
+        if (window.location.href.indexOf("#") != -1) {
+            var argument = window.location.href.split("#").pop();
+            if (argument) {
+                var el = $("blocklink_" + argument);
+                if (el) {
+                    this.displayContent(el.id);
+                }
+            }
+        }
     }
 });
 
