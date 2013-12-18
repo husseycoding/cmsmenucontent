@@ -15,7 +15,7 @@ class HusseyCoding_CmsMenuContent_Helper_Data extends Mage_Core_Helper_Abstract
         if ($blocks):
             $itemshtml = $this->getItemsHtml($blocks);
             
-            $html .= $this->getItemsCss($linkcolour, $hovercolour, $activecolour, $ahovercolour);
+            $html = $this->getItemsCss($linkcolour, $hovercolour, $activecolour, $ahovercolour);
             
             $html .= '<div class="cmsmenucontent_container">';
             
