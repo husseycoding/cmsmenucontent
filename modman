@@ -1,5 +1,5 @@
 app/code/community/HusseyCoding app/code/community/HusseyCoding
-app/design/admimhtml/default/default/layout/* app/design/admimhtml/default/default/layout/
+app/design/adminhtml/default/default/layout/* app/design/adminhtml/default/default/layout/
 app/design/frontend/base/default/layout/* app/design/frontend/base/default/layout/
 app/etc/modules/* app/etc/modules/
 skin/adminhtml/default/default/cmsmenucontent skin/adminhtml/default/default/cmsmenucontent
