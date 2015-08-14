@@ -1,6 +1,6 @@
 var selected = Class.create({
     initialize: function() {
-        this.userselected = $F("menu_menu_items");
+        this.userselected = $F("menu_block_order").split(",");
         this.getText();
         Event.observe($("menu_menu_items"), "change", this.updateForm.bindAsEventListener(this));
         $("menu_menu_items").up("tr").insert({ after: '<tr><td class="label">Block Display Order</td><td id="displayblockorder" class="value"></td></tr>' });
