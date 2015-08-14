@@ -1,0 +1,17 @@
+{
+    "name":"husseycoding/cmsmenucontent",
+    "type":"magento-module",
+    "license":"OSL-3.0",
+    "homepage":"https://github.com/husseycoding/cmsmenucontent",
+    "description":"Adds tab style content switching to Magento CMS pages.",
+    "authors":[
+        {
+            "name":"Jonathan Hussey",
+            "email":"hussey@husseycoding.co.uk"
+        }
+    ],
+    "require":{
+        "magento-hackathon/magento-composer-installer":"*"
+    }
+}
+
