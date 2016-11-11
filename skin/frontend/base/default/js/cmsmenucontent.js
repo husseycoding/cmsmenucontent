@@ -5,16 +5,8 @@ var menucontent = Class.create({
         this.bookmarkSwitch();
     },
     initMenuItems: function() {
-        var count = 0;
         $H(this.menuitems).each(function(item) {
-            if (count == 0) {
-                $(item.key).removeClassName("blocklink")
-                $(item.key).addClassName("blocklink_active")
-                $(item.value).show();
-            } else {
-                $(item.value).hide();
-            }
-            count++;
+            $(item.value).setStyle({ height:"0" });
         });
     },
     addObservers: function() {
@@ -27,13 +19,16 @@ var menucontent = Class.create({
     displayContent: function(el) {
         $H(this.menuitems).each(function(item) {
             if (item.key == el) {
-                $(item.key).removeClassName("blocklink")
-                $(item.key).addClassName("blocklink_active")
-                $(item.value).show();
-            } else {
-                $(item.key).removeClassName("blocklink_active")
-                $(item.key).addClassName("blocklink")
-                $(item.value).hide();
+                if ($(item.key).hasClassName("blocklink_active")) {
+                    $(item.key).removeClassName("blocklink_active")
+                    $(item.key).addClassName("blocklink")
+                    $(item.value).setStyle({ height:"0" });
+                } else {
+                    $(item.key).removeClassName("blocklink")
+                    $(item.key).addClassName("blocklink_active")
+                    var height = $(item.value).scrollHeight;
+                    $(item.value).setStyle({ height:height + "px" });
+                }
             }
         });
     },
@@ -44,6 +39,7 @@ var menucontent = Class.create({
                 var el = $("blocklink_" + argument);
                 if (el) {
                     this.displayContent(el.id);
+                    Effect.ScrollTo(el, {duration:1.0, offset:-5});
                 }
             }
         }

@@ -1,2 +1,12 @@
 .cmsmenucontent_container .cmsmenucontent_menu a { padding-bottom:4px; display:block; }
 .cmsmenucontent_container .cmsmenucontent_menu { margin-bottom:16px; }
+.cmsmenucontent_container .cmsmenucontent_menu a.blocklink,
+.cmsmenucontent_container .cmsmenucontent_menu a.blocklink_active { background-color:#f2f2f2; padding:7px 30px 7px 10px; margin-bottom:7px; position:relative; border:1px solid #ddd; text-decoration:none; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px; }
+.cmsmenucontent_container .cmsmenucontent_menu .blockcontent a { display:inline; }
+.cmsmenucontent_container .cmsmenucontent_menu .blockcontent { overflow:hidden; -webkit-transition:all 500ms cubic-bezier(0.670, 0.000, 0.330, 1.000); -moz-transition:all 500ms cubic-bezier(0.670, 0.000, 0.330, 1.000); -o-transition:all 500ms cubic-bezier(0.670, 0.000, 0.330, 1.000); transition:all 500ms cubic-bezier(0.670, 0.000, 0.330, 1.000); -webkit-transition-timing-function:cubic-bezier(0.670, 0.000, 0.330, 1.000); -moz-transition-timing-function:cubic-bezier(0.670, 0.000, 0.330, 1.000); -o-transition-timing-function:cubic-bezier(0.670, 0.000, 0.330, 1.000); transition-timing-function:cubic-bezier(0.670, 0.000, 0.330, 1.000); }
+.cmsmenucontent_container .cmsmenucontent_menu a.blocklink_active:after { right:10px; top:45%; border:solid transparent; content:" "; height:0; width:0; position:absolute; pointer-events:none; border-color:rgba(#888, 0); border-top-color:#888; border-width:7px; margin-left:-7px; }
+.cmsmenucontent_container .cmsmenucontent_menu a.blocklink:after { right:10px; top:50%; border:solid transparent; content:" "; height:0; width:0; position:absolute; pointer-events:none; border-color:rgba(#888, 0); border-right-color:#888; border-width:7px; margin-top:-7px; }
+.cmsmenucontent_container .cmsmenucontent_menu .information-indent:before,
+.cmsmenucontent_container .cmsmenucontent_menu .question-mark-indent:before { -webkit-border-radius:10px; -moz-border-radius:10px; border-radius:10px; width:20px; height:20px; background-color:#888; display:inline-block; line-height:20px; text-align:center; font-weight:bold; margin-right:10px; color:#f2f2f2; font-size:15px; }
+.cmsmenucontent_container .cmsmenucontent_menu .question-mark-indent:before { content:"?"; }
+.cmsmenucontent_container .cmsmenucontent_menu .information-indent:before { content:"!"; }

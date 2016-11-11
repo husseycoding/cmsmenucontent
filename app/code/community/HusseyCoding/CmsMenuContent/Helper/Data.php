@@ -6,58 +6,54 @@ class HusseyCoding_CmsMenuContent_Helper_Data extends Mage_Core_Helper_Abstract
     
     public function addBlocks($blocks, $content, $page)
     {
-        $blocks = $this->getValidateBlocks($blocks, $page->getStoreId());
+        $blocks = $this->_separateBlocks($blocks);
+        $blocks = $this->_getValidateBlocks($blocks, $page->getStoreId());
         $linkcolour = $this->validateHtmlColour($page->getLinkColour());
         $hovercolour = $this->validateHtmlColour($page->getHoverColour());
         $activecolour = $this->validateHtmlColour($page->getActiveColour());
         $ahovercolour = $this->validateHtmlColour($page->getAhoverColour());
         
-        if ($blocks):
-            $itemshtml = $this->getItemsHtml($blocks);
+        if (!empty($blocks)):
+            $itemshtml = $this->_getItemsHtml($blocks);
+            $html = $this->_getItemsCss($linkcolour, $hovercolour, $activecolour, $ahovercolour);
+            foreach ($blocks as $section => $block):
+                $html .= '<div class="cmsmenucontent_container">';
+                $html .= '<div class="cmsmenucontent_menu">';
+                $html .= $itemshtml[$section];
+                $html .= '</div>';
+                $html .= '</div>';
+                $content = preg_replace('/{{menucontent}}/', $html, $content, 1);
+                $html = '';
+            endforeach;
+            $content .= $this->_getItemsJs($blocks);
             
-            $html = $this->getItemsCss($linkcolour, $hovercolour, $activecolour, $ahovercolour);
-            
-            $html .= '<div class="cmsmenucontent_container">';
-            
-            $html .= '<div class="cmsmenucontent_menu">';
-            $html .= $itemshtml['linkshtml'];
-            $html .= '</div>';
-            
-            $html .= '<div class="cmsmenucontent_content">';
-            $html .= $itemshtml['contenthtml'];
-            $html .= '</div>';
-            
-            $html .= '</div>';
-            
-            $html .= $this->getItemsJs($blocks);
-
-            $html = str_replace('{{menucontent}}', $html, $content);
-            
-            return $html;
+            return $content;
         endif;
         
         return str_replace('{{menucontent}}', '', $content);
     }
     
-    private function getValidateBlocks($blocks, $pagescope)
+    private function _getValidateBlocks($blocks, $pagescope)
     {
         $return = array();
         $cmsall = in_array('0', $pagescope);
-        foreach ($blocks as $block):
-            $block = Mage::getModel('cms/block')->load((int) $block);
-            if ($block):
-                if ($block->getIsActive() && $block->getUseInMenuPage()):
-                    if (!$cmsall):
-                        $blockscope = $block->getStoreId();
-                        $compare = array_diff($blockscope, $pagescope);
-                        if (count($blockscope) > count($compare) || in_array('0', $blockscope)):
-                            $return[] = $block;
+        foreach ($blocks as $id => $section):
+            foreach ($section as $block):
+                $block = Mage::getModel('cms/block')->load((int) $block);
+                if ($block):
+                    if ($block->getIsActive() && $block->getUseInMenuPage()):
+                        if (!$cmsall):
+                            $blockscope = $block->getStoreId();
+                            $compare = array_diff($blockscope, $pagescope);
+                            if (count($blockscope) > count($compare) || in_array('0', $blockscope)):
+                                $return[$id][] = $block;
+                            endif;
+                        else:
+                            $return[$id][] = $block;
                         endif;
-                    else:
-                        $return[] = $block;
                     endif;
                 endif;
-            endif;
+            endforeach;
         endforeach;
         
         return $return;
@@ -77,21 +73,22 @@ class HusseyCoding_CmsMenuContent_Helper_Data extends Mage_Core_Helper_Abstract
         return false;
     }
     
-    private function getItemsHtml($blocks)
+    private function _getItemsHtml($blocks)
     {
-        $menuhtml = array();
-        $contenthtml = array();
-        foreach ($blocks as $key => $block):
-            $key++;
-            $title = $this->getBlockMenuTitle($block);
-            $menuhtml[] = '<a class="blocklink" id="blocklink_' . $key . '" href="javascript:void(0)">' . $title . '</a>';
-            $contenthtml[] = '<div class="blockcontent" id="blockcontent_' . $key . '">' . $block->getContent() . '</div>';
+        $html = array();
+        $key = 0;
+        foreach ($blocks as $k => $section):
+            foreach ($section as $block):
+                $key++;
+                $title = $this->getBlockMenuTitle($block);
+                $class = strpos($title, '?') !== false ? ' question-mark-indent' : ' information-indent';
+                $html[$k][] = '<a class="blocklink' . $class . '" id="blocklink_' . $key . '" href="javascript:void(0)">' . $title . '</a>';
+                $html[$k][] = '<div class="blockcontent" id="blockcontent_' . $key . '">' . $block->getContent() . '</div>';
+            endforeach;
+            $html[$k] = implode('', $html[$k]);
         endforeach;
         
-        $menuhtml = implode('', $menuhtml);
-        $contenthtml = implode('', $contenthtml);
-        
-        return array('linkshtml' => $menuhtml, 'contenthtml' => $contenthtml);
+        return $html;
     }
     
     public function getBlockMenuTitle($block)
@@ -99,14 +96,19 @@ class HusseyCoding_CmsMenuContent_Helper_Data extends Mage_Core_Helper_Abstract
         return $block->getLinkText() ? $block->getLinkText() : $block->getTitle();
     }
     
-    private function getItemsCss($linkcolour, $hovercolour, $activecolour, $ahovercolour)
+    private function _getItemsCss($linkcolour, $hovercolour, $activecolour, $ahovercolour)
     {
         $css = '';
         if ($linkcolour || $hovercolour || $activecolour):
             $css .= '<style type="text/css">';
             if ($linkcolour) $css .= ' .cmsmenucontent_container .cmsmenucontent_menu a.blocklink { color:' . $linkcolour . '; }';
             if ($hovercolour) $css .= ' .cmsmenucontent_container .cmsmenucontent_menu a.blocklink:hover { color:' . $hovercolour . '; }';
-            if ($activecolour) $css .= ' .cmsmenucontent_container .cmsmenucontent_menu a.blocklink_active { color:' . $activecolour . '; }';
+            if ($activecolour):
+                $css .= ' .cmsmenucontent_container .cmsmenucontent_menu a.blocklink_active { color:' . $activecolour . '; }';
+                $css .= ' .cmsmenucontent_container .cmsmenucontent_menu .information-indent:before, .cmsmenucontent_container .cmsmenucontent_menu .question-mark-indent:before { background-color:' . $activecolour . '; }';
+                $css .= ' .cmsmenucontent_container .cmsmenucontent_menu a.blocklink_active:after { border-color:rgba(' . $activecolour . ', 0); border-top-color:' . $activecolour . '; }';
+                $css .= ' .cmsmenucontent_container .cmsmenucontent_menu a.blocklink:after { border-color:rgba(' . $activecolour . ', 0); border-right-color:' . $activecolour . '; }';
+            endif;
             if ($ahovercolour) $css .= ' .cmsmenucontent_container .cmsmenucontent_menu a.blocklink_active:hover { color:' . $ahovercolour . '; }';
             $css .= ' </style>';
         endif;
@@ -114,17 +116,40 @@ class HusseyCoding_CmsMenuContent_Helper_Data extends Mage_Core_Helper_Abstract
         return $css;
     }
     
-    private function getItemsJs($blocks)
+    private function _getItemsJs($blocks)
     {
         $js = '<script type="text/javascript">';
         $js .= ' var thismenucontent = new menucontent();';
         $js .= ' thismenucontent.menuitems = {};';
-        foreach ($blocks as $key => $blocks):
-            $key++;
-            $js .= ' thismenucontent.menuitems.blocklink_' . $key . ' = "blockcontent_' . $key . '";';
+        $key = 0;
+        foreach ($blocks as $block):
+            foreach ($block as $blocks):
+                $key++;
+                $js .= ' thismenucontent.menuitems.blocklink_' . $key . ' = "blockcontent_' . $key . '";';
+            endforeach;
         endforeach;
         $js .= ' </script>';
         
         return $js;
+    }
+    
+    private function _separateBlocks($blocks)
+    {
+        $return = array();
+        $section = array();
+        foreach ($blocks as $block):
+            if ($block == 'sb'):
+                if (!empty($section)):
+                    $return[] = $section;
+                    $section = array();
+                endif;
+            elseif (!empty($block)):
+                $section[] = $block;
+            endif;
+        endforeach;
+        
+        if (!empty($section)) $return[] = $section;
+        
+        return !empty($return) ? $return : $blocks;
     }
 }

@@ -13,14 +13,14 @@ class HusseyCoding_CmsMenuContent_Block_Cms_Page_Edit_Tab_Cmsselect
 
         $menufieldset = $form->addFieldset('cmsmenucontentpages_fieldset', array(
             'legend' => Mage::helper('cms')->__('Configure Menu Content'),
-            'comment' => Mage::helper('cms')->__('Configure this page to display a menu of static block content.')
+            'comment' => Mage::helper('cms')->__('Configure this page to display at least one menu of static block content.')
         ));
         
         $menufieldset->addField('is_menu_page', 'select', array(
             'name' => 'is_menu_page',
             'label' => Mage::helper('cms')->__('Menu Page'),
             'title' => Mage::helper('cms')->__('Menu Page'),
-            'note' => Mage::helper('cms')->__('Use {{menucontent}} in content to set links position'),
+            'note' => Mage::helper('cms')->__('Use {{menucontent}} in content to set position, once for each section created using breaks.'),
             'values' => array(
                 '1' => Mage::helper('cms')->__('Enabled'),
                 '0' => Mage::helper('cms')->__('Disabled'),

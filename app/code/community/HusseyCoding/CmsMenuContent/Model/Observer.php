@@ -4,7 +4,11 @@ class HusseyCoding_CmsMenuContent_Model_Observer
     public function adminhtmlCmsPageSaveBefore($observer)
     {
         $page = $observer->getObject();
-        $page->setMenuItems(implode(',', $page->getMenuItems()));
+        $items = $page->getBlockOrder();
+        $items = preg_replace('/^(sb,)+/', '', $items);
+        $items = preg_replace('/(,sb)+$/', '', $items);
+        $page->setMenuItems($items);
+        $page->setBlockOrder($items);
     }
     
     public function adminhtmlCmsPageLoadAfter($observer)
